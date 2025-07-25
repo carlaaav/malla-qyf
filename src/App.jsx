@@ -1,145 +1,169 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
-const SEMESTRES = [
+const semesters = [
   {
-    titulo: "PRIMER AÑO - Semestre I",
-    ramos: [
-      "QFAR1101 – Matemáticas I",
-      "QFAR1102 – Química I",
-      "QFAR1103 – Técnicas Básicas de Laboratorio",
-      "QFAR1104 – Biología Celular y Molecular",
-      "QFAR1105 – Introducción a las Ciencias Farmacéuticas",
-      "CES1144 – Salud, Bienestar y Sociedad",
+    name: "Primer Año - Semestre I",
+    courses: [
+      { code: "QFAR1101", name: "Matemáticas I", prerequisites: [] },
+      { code: "QFAR1102", name: "Química I", prerequisites: [] },
+      { code: "QFAR1103", name: "Técnicas Básicas de Laboratorio", prerequisites: [] },
+      { code: "QFAR1104", name: "Biología Celular y Molecular", prerequisites: [] },
+      { code: "QFAR1105", name: "Introducción a las Ciencias Farmacéuticas", prerequisites: [] },
+      { code: "CES1144", name: "Salud, Bienestar y Sociedad", prerequisites: [] },
     ],
   },
   {
-    titulo: "PRIMER AÑO - Semestre II",
-    ramos: [
-      "QFAR1106 – Matemáticas II",
-      "QFAR1107 – Química II",
-      "QFAR1108 – Física General",
-      "QFAR1109 – Anatomía y Fisiología",
-      "QFAR1110 – Desarrollo Personal y Comunicación Efectiva",
+    name: "Primer Año - Semestre II",
+    courses: [
+      { code: "QFAR1106", name: "Matemáticas II", prerequisites: ["QFAR1101"] },
+      { code: "QFAR1107", name: "Química II", prerequisites: ["QFAR1102", "QFAR1103"] },
+      { code: "QFAR1109", name: "Fisiología y Patología I", prerequisites: ["QFAR1104"] },
+      { code: "CES1145", name: "Salud Pública", prerequisites: ["CES1144"] },
+      { code: "ELAC", name: "Electivo Antropológico Cristiano", prerequisites: [] },
+      { code: "QFAR1110", name: "Anatomía e Histología", prerequisites: [] },
     ],
   },
   {
-    titulo: "SEGUNDO AÑO - Semestre III",
-    ramos: [
-      "QFAR1201 – Química Orgánica I",
-      "QFAR1202 – Laboratorio de Química Orgánica I",
-      "QFAR1203 – Bioquímica I",
-      "QFAR1204 – Laboratorio de Bioquímica I",
-      "QFAR1205 – Fisiopatología I",
-      "QFAR1206 – Farmacología I",
+    name: "Segundo Año - Semestre III",
+    courses: [
+      { code: "QFAR1111", name: "Química Orgánica I", prerequisites: ["QFAR1107"] },
+      { code: "QFAR1112", name: "Botánica Farmacéutica", prerequisites: [] },
+      { code: "QFAR1108", name: "Biofísica", prerequisites: [] },
+      { code: "QFAR1113", name: "Fisiología y Patología II", prerequisites: ["QFAR1109"] },
+      { code: "CES1146", name: "Salud Familiar Comunitaria e Intercultural I", prerequisites: ["CES1145"] },
+      { code: "EL1", name: "Electivo Diversidad I", prerequisites: [] },
     ],
   },
   {
-    titulo: "SEGUNDO AÑO - Semestre IV",
-    ramos: [
-      "QFAR1207 – Química Orgánica II",
-      "QFAR1208 – Laboratorio de Química Orgánica II",
-      "QFAR1209 – Bioquímica II",
-      "QFAR1210 – Laboratorio de Bioquímica II",
-      "QFAR1211 – Fisiopatología II",
-      "QFAR1212 – Farmacología II",
+    name: "Segundo Año - Semestre IV",
+    courses: [
+      { code: "QFAR1115", name: "Química Orgánica II", prerequisites: ["QFAR1111"] },
+      { code: "QFAR1116", name: "Química Analítica", prerequisites: ["QFAR1107"] },
+      { code: "QFAR1117", name: "Bioquímica General", prerequisites: ["QFAR1111"] },
+      { code: "CES1147", name: "Salud Familiar Comunitaria e Intercultural II", prerequisites: ["CES1146"] },
+      { code: "QFAR1114", name: "Comunicación en salud", prerequisites: [] },
+      { code: "QFAR1118", name: "Fisicoquímica", prerequisites: ["QFAR1107", "QFAR1106"] },
     ],
   },
   {
-    titulo: "TERCER AÑO - Semestre V",
-    ramos: [
-      "QFAR1301 – Microbiología",
-      "QFAR1302 – Laboratorio de Microbiología",
-      "QFAR1303 – Inmunología",
-      "QFAR1304 – Farmacognosia",
-      "QFAR1305 – Tecnología Farmacéutica I",
+    name: "Tercer Año - Semestre V",
+    courses: [
+      { code: "QFAR1119", name: "Farmacología General", prerequisites: ["QFAR1115"] },
+      { code: "QFAR1120", name: "Microbiología", prerequisites: ["QFAR1102"] },
+      { code: "QFAR1121", name: "Análisis Instrumental", prerequisites: [] },
+      { code: "QFAR1122", name: "Farmacognosia", prerequisites: ["QFAR1112", "QFAR1115"] },
+      { code: "CES1158", name: "Práctica Comunitaria Interdisciplinaria", prerequisites: ["CES1147"] },
+      { code: "EL2", name: "Electivo Diversidad II", prerequisites: [] },
     ],
   },
   {
-    titulo: "TERCER AÑO - Semestre VI",
-    ramos: [
-      "QFAR1306 – Parasitología",
-      "QFAR1307 – Laboratorio de Parasitología",
-      "QFAR1308 – Farmacología Clínica",
-      "QFAR1309 – Tecnología Farmacéutica II",
-      "QFAR1310 – Control de Calidad de Medicamentos",
+    name: "Tercer Año - Semestre VI",
+    courses: [
+      { code: "QFAR1123", name: "Farmacología de Sistemas I", prerequisites: ["QFAR1113", "QFAR1119"] },
+      { code: "QFAR1124", name: "Bioquímica Clínica", prerequisites: ["QFAR1117", "QFAR1116"] },
+      { code: "QFAR1125", name: "Farmacoquímica I", prerequisites: ["QFAR1119"] },
+      { code: "QFAR1126", name: "Inmunología", prerequisites: ["QFAR1113", "QFAR1119"] },
+      { code: "QFAR1127", name: "Bioestadística", prerequisites: ["QFAR1106"] },
+      { code: "QFAR1131", name: "Administración y gestión farmacéutica", prerequisites: ["QFAR1114", "QFAR1119", "QFAR1121", "QFAR1122"] },
     ],
   },
   {
-    titulo: "CUARTO AÑO - Semestre VII",
-    ramos: [
-      "QFAR1401 – Legislación Farmacéutica",
-      "QFAR1402 – Toxicología",
-      "QFAR1403 – Gestión Farmacéutica",
-      "QFAR1404 – Tecnología Farmacéutica III",
-      "QFAR1405 – Farmacia Comunitaria",
+    name: "Cuarto Año - Semestre VII",
+    courses: [
+      { code: "QFAR1128", name: "Farmacología de Sistemas II", prerequisites: ["QFAR1123"] },
+      { code: "QFAR1129", name: "Tecnología Farmacéutica I", prerequisites: ["QFAR1116"] },
+      { code: "QFAR1130", name: "Farmacoquímica II", prerequisites: ["QFAR1125"] },
+      { code: "QFAR1145", name: "Electivo de Especialidad I", prerequisites: ["QFAR1131", "QFAR1125"] },
+      { code: "QFAR1122-2", name: "Práctica Preliminar", prerequisites: ["QFAR1131", "QFAR1125", "QFAR1123", "QFAR1124"] },
+      { code: "ELTE", name: "Electivo Teológico", prerequisites: [] },
     ],
   },
   {
-    titulo: "CUARTO AÑO - Semestre VIII",
-    ramos: [
-      "QFAR1406 – Biofarmacia y Farmacocinética",
-      "QFAR1407 – Farmacia Hospitalaria",
-      "QFAR1408 – Clínica Farmacéutica",
-      "QFAR1409 – Evaluación de Productos Farmacéuticos",
-      "QFAR1410 – Ética Profesional",
+    name: "Cuarto Año - Semestre VIII",
+    courses: [
+      { code: "QFAR1133", name: "Toxicología", prerequisites: ["QFAR1128", "QFAR1121"] },
+      { code: "QFAR1134", name: "Tecnología Farmacéutica II", prerequisites: ["QFAR1129"] },
+      { code: "QFAR1135", name: "Atención Farmacéutica", prerequisites: ["QFAR1124", "QFAR1128"] },
+      { code: "QFAR1140", name: "Cosmética Farmacéutica", prerequisites: ["QFAR1134"] },
+      { code: "QFAR1136", name: "Farmacia Comunitaria y Asistencial", prerequisites: ["QFAR1128", "QFAR1129"] },
+      { code: "QFAR1137", name: "Seminarios de Investigación", prerequisites: ["QFAR1132"] },
+      { code: "QFAR1138", name: "Legislación Farmacéutica", prerequisites: ["QFAR1132", "QFAR1128", "QFAR1129"] },
     ],
   },
   {
-    titulo: "QUINTO AÑO - Semestre IX",
-    ramos: [
-      "QFAR1501 – Práctica Profesional I",
-      "QFAR1502 – Seminario de Integración",
-      "QFAR1503 – Electivo Profesional I",
+    name: "Quinto Año - Semestre IX",
+    courses: [
+      { code: "QFAR1146", name: "Electivo Interprofesional", prerequisites: ["QFAR1136"] },
+      { code: "QFAR1139", name: "Biofarmacia", prerequisites: ["QFAR1134"] },
+      { code: "QFAR1140", name: "Cosmética Farmacéutica", prerequisites: ["QFAR1134"] },
+      { code: "QFAR1141", name: "Farmacia Clínica", prerequisites: ["QFAR1130", "QFAR1135"] },
+      { code: "IET1433", name: "Ética Profesional", prerequisites: [] },
+      { code: "EL3", name: "Electivo Diversidad III", prerequisites: [] },
     ],
   },
   {
-    titulo: "QUINTO AÑO - Semestre X",
-    ramos: [
-      "QFAR1504 – Práctica Profesional II",
-      "QFAR1505 – Proyecto de Título",
-      "QFAR1506 – Electivo Profesional II",
+    name: "Quinto Año - Semestre X",
+    courses: [
+      { code: "QFAR1142", name: "Práctica Profesional", prerequisites: ["QFAR1138", "QFAR1141", "QFAR1135", "QFAR1139", "QFAR1136", "QFAR1133"] },
+      { code: "QFAR1143", name: "Actividad de Titulación", prerequisites: ["QFAR1137"] },
+      { code: "QFAR1144", name: "Electivo de Especialidad II", prerequisites: ["QFAR1145"] },
     ],
   },
 ];
 
 export default function App() {
-  const [completados, setCompletados] = useState({});
+  const [approved, setApproved] = useState([]);
 
-  const toggleRamo = (nombre) => {
-    setCompletados((prev) => ({
-      ...prev,
-      [nombre]: !prev[nombre],
-    }));
+  const toggleApproved = (code) => {
+    setApproved((prev) =>
+      prev.includes(code) ? prev.filter((c) => c !== code) : [...prev, code]
+    );
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-white p-6 font-sans">
-      <h1 className="text-4xl font-bold text-center text-pink-700 mb-10">
-        Malla Curricular – Química y Farmacia
-      </h1>
+  const isUnlocked = (course) =>
+    course.prerequisites.every((pre) => approved.includes(pre));
 
-      {SEMESTRES.map((semestre, i) => (
-        <div key={i} className="mb-8">
-          <h2 className="text-2xl font-semibold text-pink-600 mb-4">
-            {semestre.titulo}
-          </h2>
-          <ul className="space-y-2">
-            {semestre.ramos.map((ramo) => (
-              <li
-                key={ramo}
-                className={`cursor-pointer border rounded px-4 py-2 transition ${
-                  completados[ramo]
-                    ? "bg-green-100 line-through text-gray-500"
-                    : "bg-white hover:bg-pink-100"
-                }`}
-                onClick={() => toggleRamo(ramo)}
-              >
-                {ramo}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+  return (
+    <div className="min-h-screen bg-pink-50 p-6">
+      <h1 className="text-4xl font-bold mb-8 text-center text-pink-700">
+        Malla Curricular Química y Farmacia
+      </h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {semesters.map((semester) => (
+          <div
+            key={semester.name}
+            className="bg-white rounded-2xl shadow p-6 border border-pink-300"
+          >
+            <h2 className="text-2xl font-semibold mb-4 text-pink-600">
+              {semester.name}
+            </h2>
+            <div className="flex flex-col gap-3">
+              {semester.courses.map((course) => {
+                const unlocked = isUnlocked(course);
+                const checked = approved.includes(course.code);
+                return (
+                  <button
+                    key={course.code}
+                    disabled={!unlocked}
+                    onClick={() => unlocked && toggleApproved(course.code)}
+                    className={`w-full text-left p-3 rounded-xl border transition
+                      ${
+                        checked
+                          ? "bg-pink-300 border-pink-700"
+                          : unlocked
+                          ? "bg-white border-pink-300 hover:bg-pink-100 cursor-pointer"
+                          : "bg-pink-100 border-pink-200 text-pink-400 cursor-not-allowed"
+                      }
+                    `}
+                  >
+                    <strong>{course.code}</strong> – {course.name}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
